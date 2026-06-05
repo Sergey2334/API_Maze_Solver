@@ -28,7 +28,7 @@ public final class MyUtils {
         return random.nextInt(min, max + 1);
     }
 
-    public static void downloadAndSaveMazeImage(ApiService apiService) {
+    public static void downloadAndSaveMazeImage(ApiService apiService, int width, int height) {
         // 1. Always execute file and network tasks on a separate working thread
         new Thread(() -> {
             long start = System.currentTimeMillis();
@@ -36,7 +36,7 @@ public final class MyUtils {
             System.out.println("Downloading maze canvas image from API...");
 
             // 2. Fetch the image from your ApiService
-            BufferedImage mazeImg = apiService.getMazeImage();
+            BufferedImage mazeImg = apiService.getMazeImage(width, height);
 
             if (mazeImg == null) {
                 System.err.println("Aborting save: No valid image data downloaded.");

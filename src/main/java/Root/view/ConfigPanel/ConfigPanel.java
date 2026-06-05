@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.security.Key;
 
 public class ConfigPanel extends JPanel {
     private JPanel wallCellColorConfigLabel;
@@ -144,6 +145,10 @@ public class ConfigPanel extends JPanel {
         // 3. Update the text string for the Animation Delay label
         this.delayLabel.setText(mazeConfig.getAnimationDelayInMs() + " ms");
 
+        // 4. Update Width And Height Text Field, In Case Of An Invalid Input
+        this.widthTextField.setText(Integer.toString(mazeConfig.getWidth()));
+        this.heightTextField.setText(Integer.toString(mazeConfig.getHeight()));
+
         // CRITICAL SWING STEP: Forces the window to recalculate internal alignments and update immediately on screen
         this.revalidate();
         this.repaint();
@@ -156,5 +161,12 @@ public class ConfigPanel extends JPanel {
 
     public MyButton getMazeButton() {
         return this.getMazeButton;
+    }
+
+    public String getWidthText() {
+        return this.widthTextField.getText();
+    }
+    public String getHeightText() {
+        return this.heightTextField.getText();
     }
 }

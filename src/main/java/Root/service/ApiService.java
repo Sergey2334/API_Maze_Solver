@@ -22,7 +22,7 @@ public class ApiService {
 
     }
 
-    public MazeConfig getMazeConfig() {
+    public MazeConfig getMazeConfig(int width, int height) {
         MazeConfig mazeConfig = new MazeConfig();
         String mazeConfigString = "";
 
@@ -64,6 +64,8 @@ public class ApiService {
             mazeConfig.setGridColor(gridColor);
             mazeConfig.setGridExist(drawGrid);
             mazeConfig.setAnimationDelayInMs(animationDelay);
+            mazeConfig.setWidth(width);
+            mazeConfig.setHeight(height);
 
             System.out.println("Successfully built model: " + mazeConfig);
         } catch (Exception e) {
@@ -74,12 +76,12 @@ public class ApiService {
         return mazeConfig;
     }
 
-    public BufferedImage getMazeImage() {
+    public BufferedImage getMazeImage(int width, int height) {
         // Using BufferedImage instead of the raw abstract Image class is best for Swing painting
         BufferedImage mazeImage = null;
 
         Request request = new Request.Builder()
-                .url(Constants.GET_MAZE_IMAGE_URL)
+                .url(Constants.GET_MAZE_IMAGE_URL + "?width=" + width + "&height=" + height)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {

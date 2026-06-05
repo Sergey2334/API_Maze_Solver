@@ -1,5 +1,7 @@
 package Root.model;
 
+import Root.core.Constants;
+
 import java.awt.*;
 
 public class MazeConfig {
@@ -13,13 +15,13 @@ public class MazeConfig {
     private int animationDelayInMs;
 
     public MazeConfig() {
-        this.width = this.height = 30;
+        this.width = this.height = Constants.DEFAULT_MAZE_SIZE;
 
         this.wallCellColor = Color.RED;
         this.pathColor = Color.GREEN;
         this.gridColor = Color.BLUE;
         this.isGridExist = true;
-        this.animationDelayInMs = 80;
+        this.animationDelayInMs = Constants.DEFAULT_ANIMATION_DELAY;
     }
 
     public String toString() {
@@ -28,6 +30,8 @@ public class MazeConfig {
                 "\nGrid Color: " + this.gridColor.toString() +
                 "\nGrid: " + this.isGridExist +
                 "\nAnimation Delay: " + this.animationDelayInMs +
+                "\nWidth: " + this.width +
+                "\nHeight: " + this.height +
                 "\n";
     }
 
@@ -62,10 +66,18 @@ public class MazeConfig {
 
     // --- Setters ---
     public void setWidth(int width) {
+        if (width < Constants.MIN_MAZE_SIZE || width > Constants.MAX_MAZE_SIZE) {
+            System.out.println("Invalid Width, Set Default Width 30");
+            width = Constants.DEFAULT_MAZE_SIZE;
+        }
         this.width = width;
     }
 
     public void setHeight(int height) {
+        if (height < Constants.MIN_MAZE_SIZE || height > Constants.MAX_MAZE_SIZE) {
+            System.out.println("Invalid Height, Set Default Height 30");
+            height = Constants.DEFAULT_MAZE_SIZE;
+        }
         this.height = height;
     }
 
