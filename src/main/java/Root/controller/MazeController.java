@@ -142,7 +142,7 @@ public class MazeController {
 
                 if (freshlyDownloadedImage != null) {
                     // Pass fresh image directly to decoder
-                    MazeDecoder decoder = new MazeDecoder(this.mazeModel.getMazeHeight(), this.mazeModel.getMazeWidth());
+                    MazeDecoder decoder = new MazeDecoder(this.mazeModel.getMazeWidth(), this.mazeModel.getMazeHeight());
                     Position[][] dynamicPositions = decoder.getPositionsFromImage(freshlyDownloadedImage);
 
                     // Update model matrices

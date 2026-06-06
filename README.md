@@ -55,6 +55,17 @@ Before anything cool happens, you need to tell the app how big of a maze you wan
 
 *Once clicked, the background threads wake up and do the heavy lifting while you sit back and enjoy the show.*
 
+<details>
+  <summary><h3 style="display: inline;">🎬 Proof That It Actually Works (App Demo inside)</h3></summary>
+
+  <p align="center">
+    <img src="readme-images/API_Maze_Solver_Start_App_GIF.gif" width="600" alt="Start App"><br><br>
+    <img src="readme-images/API_Maze_Solver_Configurations_GIF.gif" width="600" alt="Configurations"><br><br>
+    <img src="readme-images/API_Maze_Solver_Solving_Maze_GIF.gif" width="600" alt="Solving Maze">
+  </p>
+
+</details>
+
 ### 🖥️ UI Layout & Controls
 
 The interface keeps things simple by breaking the window into just two main layout panels, complete with a clean FlatLaf styling.
