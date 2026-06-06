@@ -28,52 +28,50 @@ public final class MyUtils {
         return random.nextInt(min, max + 1);
     }
 
-    public static void downloadAndSaveMazeImage(ApiService apiService, int width, int height) {
-        // 1. Always execute file and network tasks on a separate working thread
-        new Thread(() -> {
-            long start = System.currentTimeMillis();
+    public static BufferedImage downloadMazeAsBufferedImage(ApiService apiService, int width, int height) {
+        long start = System.currentTimeMillis();
 
-            System.out.println("Downloading maze canvas image from API...");
+        System.out.println("Downloading maze canvas image from API...");
 
-            // 2. Fetch the image from your ApiService
-            BufferedImage mazeImg = apiService.getMazeImage(width, height);
+        // 2. Fetch the image from your ApiService
+        BufferedImage mazeImg = apiService.getMazeImage(width, height);
 
-            if (mazeImg == null) {
-                System.err.println("Aborting save: No valid image data downloaded.");
-                return;
+        if (mazeImg == null) {
+            System.err.println("Aborting save: No valid image data downloaded.");
+            return null; // Return null so the controller knows to stop
+        }
+
+        try {
+            // 3. Define the destination folder path (e.g., a folder named "saved_mazes")
+            File directory = new File("src/main/resources/mazeImage");
+
+            // Automatically build the physical folders on your disk if they don't exist yet
+            if (!directory.exists()) {
+                directory.mkdirs();
             }
 
-            try {
-                // 3. Define the destination folder path (e.g., a folder named "saved_mazes")
-                File directory = new File("src/main/resources/mazeImage");
+            // 4. Create the target file naming parameter (e.g., "maze.png")
+            File outputFile = new File(directory, "maze.png");
 
-                // Automatically build the physical folders on your disk if they don't exist yet
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
+            // 5. Write the memory asset disk block cleanly as a high-quality PNG
+            boolean success = ImageIO.write(mazeImg, "png", outputFile);
 
-                // 4. Create the target file naming parameter (e.g., "maze.png")
-                File outputFile = new File(directory, "maze.png");
-
-                // 5. Write the memory asset disk block cleanly as a high-quality PNG
-                // Arguments: (RenderedImage, FormatName, FileDestination)
-                boolean success = ImageIO.write(mazeImg, "png", outputFile);
-
-                if (success) {
-                    System.out.println("Success! Maze canvas image saved to: " + outputFile.getAbsolutePath());
-                } else {
-                    System.err.println("Error: No appropriate image writer engine found for PNG.");
-                }
-
-            } catch (IOException e) {
-                System.err.println("Failed to write image payload to local disk: " + e.getMessage());
-                e.printStackTrace();
+            if (success) {
+                System.out.println("Success! Maze canvas image saved to: " + outputFile.getAbsolutePath());
+            } else {
+                System.err.println("Error: No appropriate image writer engine found for PNG.");
             }
 
-            long end = System.currentTimeMillis();
+        } catch (IOException e) {
+            System.err.println("Failed to write image payload to local disk: " + e.getMessage());
+            e.printStackTrace();
+        }
 
-            System.out.println("Total Time To Download: " + MyUtils.formatMStoHHMMSSMS(end - start));
-        }).start();
+        long end = System.currentTimeMillis();
+        System.out.println("Total Time To Download: " + MyUtils.formatMStoHHMMSSMS(end - start));
+
+        // Return the fresh image reference directly from system RAM memory!
+        return mazeImg;
     }
 
     public static String formatMStoHHMMSSMS(long ms) {

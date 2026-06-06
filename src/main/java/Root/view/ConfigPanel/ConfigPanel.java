@@ -9,7 +9,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.security.Key;
 
 public class ConfigPanel extends JPanel {
     private JPanel wallCellColorConfigLabel;
@@ -166,6 +165,7 @@ public class ConfigPanel extends JPanel {
     public String getWidthText() {
         return this.widthTextField.getText();
     }
+
     public String getHeightText() {
         return this.heightTextField.getText();
     }

@@ -4,10 +4,13 @@ import Root.core.Constants;
 import Root.core.MyUtils;
 import Root.model.Maze;
 import Root.model.MazeConfig;
+import Root.model.Position;
 import Root.service.ApiService;
+import Root.service.MazeDecoder;
 import Root.view.MainWindow.MainWindow;
 
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 public class MazeController {
     private ApiService apiService;
@@ -15,14 +18,14 @@ public class MazeController {
     private MainWindow mainWindowView;
     private Maze mazeModel;
 
-    private boolean[][] mazePositions;
+    private Position[][] mazePositions;
     private int mazeWidth;
     private int mazeHeight;
 
     public MazeController() {
         this.apiService = new ApiService();
         MazeConfig mazeConfig = this.apiService.getMazeConfig(Constants.DEFAULT_MAZE_SIZE, Constants.DEFAULT_MAZE_SIZE);
-        MyUtils.downloadAndSaveMazeImage(this.apiService, Constants.DEFAULT_MAZE_SIZE, Constants.DEFAULT_MAZE_SIZE);
+        MyUtils.downloadMazeAsBufferedImage(this.apiService, Constants.DEFAULT_MAZE_SIZE, Constants.DEFAULT_MAZE_SIZE);
 
         this.mazeModel = new Maze(mazeConfig);
         this.mainWindowView = new MainWindow();
@@ -35,7 +38,7 @@ public class MazeController {
     }
 
     private void attachViewListeners() {
-        // Wire up the Refresh Configurations button action event
+        // Wire up the Refresh Configurations Button action event
         this.mainWindowView.getConfigPanel().getRefreshConfigButton().addActionListener(e -> {
             // 1. Run the API call on a background thread so the FlatLaf UI doesn't freeze
             new Thread(() -> {
@@ -57,18 +60,34 @@ public class MazeController {
             }).start();
         });
 
+        // Wire up the Get Maze Button action event
         this.mainWindowView.getConfigPanel().getMazeButton().addActionListener(e -> {
-            if (!this.updateMazeSize()) {
-                return;
-            }
-            System.out.println("Get Maze button clicked! Launching network request task...");
-
-            // 1. Run the API call on a background thread so the FlatLaf UI doesn't freeze
             new Thread(() -> {
-                this.updateMazeSize();
-                MyUtils.downloadAndSaveMazeImage(this.apiService, this.mazeWidth, this.mazeHeight);
+                if (!this.updateMazeSize()) {
+                    return;
+                }
+
+                System.out.println("Get Maze button clicked! Launching network request task...");
+
+                // 1. Modify your download utility to return the live BufferedImage object directly from the network stream
+                BufferedImage freshlyDownloadedImage = MyUtils.downloadMazeAsBufferedImage(this.apiService, this.mazeWidth, this.mazeHeight);
+
+                if (freshlyDownloadedImage != null) {
+                    // 2. Pass the fresh image directly to the decoder—no file caching lag!
+                    MazeDecoder decoder = new MazeDecoder(this.mazeWidth, this.mazeHeight);
+                    Position[][] dynamicPositions = decoder.getPositionsFromImage(freshlyDownloadedImage);
+
+                    // 3. Update your model matrices
+                    this.mazeModel.setWallPositions(dynamicPositions);
+
+                    // 4. Print or repaint on the Event Dispatch Thread
+                    SwingUtilities.invokeLater(() -> {
+                        System.out.println(this.mazeModel.toString());
+                    });
+                }
             }).start();
         });
+
     }
 
     private boolean updateMazeSize() {

@@ -17,6 +17,8 @@ public final class Constants {
     public static final int DEFAULT_MAZE_SIZE = 30;
     public static final int DEFAULT_ANIMATION_DELAY = 80;
 
+    public static final Color MAZE_PATH_COLOR = Color.WHITE;
+
     public static final String GET_MAZE_CONFIG_URL = "https://backend-qcf9.onrender.com/fm1/get-render-config";
     public static final String GET_MAZE_IMAGE_URL = "https://backend-qcf9.onrender.com/fm1/get-maze-image";
 }
