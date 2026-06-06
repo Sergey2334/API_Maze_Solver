@@ -1,5 +1,6 @@
 package Root.view.MazePanel;
 
+import Root.model.Maze;
 import Root.view.ViewUtils.MyButton;
 import Root.view.ViewUtils.ViewUtils;
 import net.miginfocom.swing.MigLayout;
@@ -7,12 +8,12 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
 public class MazePanel extends JPanel {
-    private JPanel mazeDrawing;
+    private Maze mazeDrawing;
     private MyButton checkSolutionButton;
 
-    public MazePanel() {
+    public MazePanel(Maze maze) {
         this.initialize();
-        this.initializeComponents();
+        this.initializeComponents(maze);
     }
 
     private void initialize() {
@@ -30,9 +31,9 @@ public class MazePanel extends JPanel {
         this.setBorder(ViewUtils.createCustomTitledBorder("Maze Panel", true));
     }
 
-    private void initializeComponents() {
-        this.mazeDrawing = new JPanel(true);
-        this.mazeDrawing.setBorder(ViewUtils.createCustomTitledBorder("Maze Drawing", true));
+    private void initializeComponents(Maze maze) {
+        this.mazeDrawing = maze;
+//        this.mazeDrawing.setBorder(ViewUtils.createCustomTitledBorder("Maze Drawing", true));
         this.checkSolutionButton = new MyButton("CHECK SOLUTION");
 
         this.add(mazeDrawing, "grow, push");

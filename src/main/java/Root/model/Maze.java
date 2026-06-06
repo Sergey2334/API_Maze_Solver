@@ -1,18 +1,23 @@
 package Root.model;
 
+import Root.core.Constants;
+
+import javax.swing.*;
 import java.awt.*;
 
-public class Maze {
+public class Maze extends JLabel {
     private int width;
     private int height;
     private Position[][] positions;
 
     private Color wallCellColor;
     private Color pathColor;
+    private Color solvedPathColor;
     private Color gridColor;
     private boolean isDrawGrid;
 
     public Maze(MazeConfig mazeConfig) {
+        this.initialize();
         this.initializeMaze(mazeConfig);
     }
 
@@ -43,12 +48,16 @@ public class Maze {
         return sb.toString();
     }
 
+    private void initialize() {
+        this.pathColor = Constants.MAZE_PATH_COLOR;
+    }
+
     private void initializeMaze(MazeConfig mazeConfig) {
         this.width = mazeConfig.getWidth();
         this.height = mazeConfig.getHeight();
         this.positions = new Position[this.height][this.width];
         this.wallCellColor = mazeConfig.getWallCellColor();
-        this.pathColor = mazeConfig.getPathColor();
+        this.solvedPathColor = mazeConfig.getPathColor();
         this.gridColor = mazeConfig.getGridColor();
         this.isDrawGrid = mazeConfig.isGridExist();
     }
@@ -64,6 +73,70 @@ public class Maze {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 this.positions[i][j] = new Position(i, j, wallPositions[i][j].isWall());
+            }
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // 1. Guard check to make sure the maze array is decoded and populated
+        if (this.positions == null || this.positions.length == 0 || this.positions[0].length == 0) {
+            return;
+        }
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        // 2. Extract dimensions directly from the live position array
+        int rows = this.positions.length;
+        int cols = this.positions[0].length;
+
+        // 3. Get the real-time panel dimensions directly
+        int panelWidth = this.getWidth();
+        int panelHeight = this.getHeight();
+
+        // 4. Force cells to be perfect squares by finding the limiting dimension
+        // Dynamic Scaling :D
+        int cellWidth = panelWidth / cols;
+        int cellHeight = panelHeight / rows;
+        int cellSize = Math.min(cellWidth, cellHeight); // Ensure uniform scale
+
+        // 5. Calculate total grid pixel dimensions based on our locked cell size
+        int totalMazeWidth = cols * cellSize;
+        int totalMazeHeight = rows * cellSize;
+
+        // 6. Calculate centering padding offsets for both axes
+        int offsetX = (panelWidth - totalMazeWidth) / 2;
+        int offsetY = (panelHeight - totalMazeHeight) / 2;
+
+        // 7. Render loop
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Position currentPos = this.positions[i][j];
+
+                // Check for safety in case an array slot is somehow null
+                if (currentPos == null) continue;
+
+                // Determine pixel coordinates incorporating the centering offsets
+                int x = offsetX + (j * cellSize);
+                int y = offsetY + (i * cellSize);
+
+                // 8. Select color based on wall state
+                if (currentPos.isWall()) {
+                    g2d.setColor(this.wallCellColor);
+                } else {
+                    g2d.setColor(this.pathColor);
+                }
+
+                // Fill block tile using uniform sizing
+                g2d.fillRect(x, y, cellSize, cellSize);
+
+                // 9. Render grid overlay lines if requested
+                if (this.isDrawGrid) {
+                    g2d.setColor(this.gridColor);
+                    g2d.drawRect(x, y, cellSize, cellSize);
+                }
             }
         }
     }

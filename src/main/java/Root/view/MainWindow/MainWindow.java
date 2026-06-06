@@ -1,5 +1,6 @@
 package Root.view.MainWindow;
 
+import Root.model.Maze;
 import Root.view.ConfigPanel.ConfigPanel;
 import Root.view.MazePanel.MazePanel;
 import com.formdev.flatlaf.extras.components.FlatSeparator;
@@ -11,9 +12,9 @@ public class MainWindow extends JFrame {
     private MazePanel mazePanel;
     private ConfigPanel configPanel;
 
-    public MainWindow() {
+    public MainWindow(Maze mazeModel) {
         this.initialize();
-        this.initializeComponents();
+        this.initializeComponents(mazeModel);
     }
 
     private void initialize() {
@@ -26,8 +27,8 @@ public class MainWindow extends JFrame {
         this.setVisible(true);
     }
 
-    private void initializeComponents() {
-        this.mazePanel = new MazePanel();
+    private void initializeComponents(Maze mazeModel) {
+        this.mazePanel = new MazePanel(mazeModel);
         this.configPanel = new ConfigPanel();
 
         this.add(new FlatSeparator(), BorderLayout.NORTH);
