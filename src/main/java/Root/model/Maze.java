@@ -122,11 +122,15 @@ public class Maze extends JLabel {
                 int x = offsetX + (j * cellSize);
                 int y = offsetY + (i * cellSize);
 
-                // 8. Select color based on wall state
+                // 8. Select color based on wall state and solver animation flags
                 if (currentPos.isWall()) {
                     g2d.setColor(this.wallCellColor);
+                } else if (currentPos.isFinalPath()) {
+                    g2d.setColor(this.solvedPathColor);
+                } else if (currentPos.isVisited()) {
+                    g2d.setColor(Color.YELLOW); // Clear yellow for the exploration search phase
                 } else {
-                    g2d.setColor(this.pathColor);
+                    g2d.setColor(this.pathColor); // Default background track pathway color
                 }
 
                 // Fill block tile using uniform sizing
@@ -139,5 +143,35 @@ public class Maze extends JLabel {
                 }
             }
         }
+    }
+
+    // --- Getters ---
+    public Position[][] getPositions() {
+        return this.positions;
+    }
+
+    public int getMazeWidth() {
+        return this.width;
+    }
+
+    public int getMazeHeight() {
+        return this.height;
+    }
+
+    // --- Setters ---
+    public void setWidth(int width) {
+        if (width < Constants.MIN_MAZE_SIZE || width > Constants.MAX_MAZE_SIZE) {
+            System.out.println("Invalid Width, Set Default Width 30");
+            width = Constants.DEFAULT_MAZE_SIZE;
+        }
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        if (height < Constants.MIN_MAZE_SIZE || height > Constants.MAX_MAZE_SIZE) {
+            System.out.println("Invalid Height, Set Default Height 30");
+            height = Constants.DEFAULT_MAZE_SIZE;
+        }
+        this.height = height;
     }
 }

@@ -28,6 +28,8 @@ public class ConfigPanel extends JPanel {
     private JTextField widthTextField;
     private JTextField heightTextField;
 
+    private int animationDelayInMs;
+
     public ConfigPanel() {
         this.initialize();
         this.initializeComponents();
@@ -142,7 +144,8 @@ public class ConfigPanel extends JPanel {
         this.drawGridConfigLabel.add(this.drawGridCheckBox, "push, align center");
 
         // 3. Update the text string for the Animation Delay label
-        this.delayLabel.setText(mazeConfig.getAnimationDelayInMs() + " ms");
+        this.animationDelayInMs = mazeConfig.getAnimationDelayInMs(); // PATCH
+        this.delayLabel.setText(this.animationDelayInMs + " ms");
 
         // 4. Update Width And Height Text Field, In Case Of An Invalid Input
         this.widthTextField.setText(Integer.toString(mazeConfig.getWidth()));
@@ -168,5 +171,9 @@ public class ConfigPanel extends JPanel {
 
     public String getHeightText() {
         return this.heightTextField.getText();
+    }
+
+    public int getAnimationDelayInMs() {
+        return this.animationDelayInMs;
     }
 }

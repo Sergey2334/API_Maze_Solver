@@ -37,11 +37,11 @@ public class MazeConfig {
 
     // --- Getters ---
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     public Color getWallCellColor() {

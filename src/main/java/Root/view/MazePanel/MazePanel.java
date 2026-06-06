@@ -17,16 +17,6 @@ public class MazePanel extends JPanel {
     }
 
     private void initialize() {
-//        // 1. "fill" stretches the whole grid vertically and horizontally
-//        String layoutConstraints = "fill, insets 0";
-//
-//        // 2. Lock columns into exact proportions: 35%, 30%, 35%
-//        String columnConstraints = "[35%, fill, grow][30%, fill, grow][35%, fill, grow]";
-//
-//        // 3. Stretches the row vertically to fill the full height
-//        String rowConstraints = "[fill]";
-//
-//        this.setLayout(new MigLayout(layoutConstraints, columnConstraints, rowConstraints));
         this.setLayout(new MigLayout("wrap 1, fill"));
         this.setBorder(ViewUtils.createCustomTitledBorder("Maze Panel", true));
     }
@@ -38,5 +28,9 @@ public class MazePanel extends JPanel {
 
         this.add(mazeDrawing, "grow, push");
         this.add(checkSolutionButton, "align center");
+    }
+
+    public MyButton getCheckSolutionButton() {
+        return this.checkSolutionButton;
     }
 }
